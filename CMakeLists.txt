@@ -7,8 +7,11 @@ find_package( OpenCV REQUIRED )
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/include 
-     ${OpenCV_INCLUDE_DIRS} )
+    ${OpenCV_INCLUDE_DIRS}
+)
+
+message(${OpenCV_INCLUDE_DIRS})
  
-add_executable( ImageAnalysis src/main.cpp src/Analysis.cpp src/Interact.cpp)
+add_executable( ImageAnalysis src/main.cpp src/Interact.cpp)
 
 target_link_libraries( ImageAnalysis ${OpenCV_LIBS} )

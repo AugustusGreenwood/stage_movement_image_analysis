@@ -1,49 +1,86 @@
 #include "Interact.h"
-#include <opencv2/imgcodecs.hpp>
+#include <filesystem>
+#include <opencv4/opencv2/highgui.hpp>
+#include <opencv4/opencv2/imgcodecs.hpp>
+#include <thread>
 
-cv::Mat loadImage(const std::string &image_path) {
-    cv::Mat image = cv::imread(image_path);
-    if (image.empty()) {
-        std::cout << image_path << std::endl;
-        std::cerr << "Error: Could not open or find the image" << std::endl;
+void display_image(cv::Mat const &image, std::string const &window_name) {
+    cv::namedWindow(window_name, cv::WINDOW_NORMAL);
+    cv::imshow(window_name, image);
+}
+
+bool string_ends_with(std::string const &str, std::string const &end) {
+    if (end.size() > str.size()) {
+        return false;
+    } else {
+        return std::equal(end.rbegin(), end.rend(), str.rbegin());
     }
-    return image;
 }
-void displayImage(const cv::Mat &image, const std::string &window_name) {
-    namedWindow(window_name, cv::WINDOW_NORMAL);
-    imshow(window_name, image);
-}
-void saveImage(const cv::Mat &image, const std::string &output_path) {
-    imwrite(output_path, image);
-    std::cout << "Image saved as: " << output_path << std::endl;
-}
-bool fileIsImage(std::string const &file) {
-    return (0 == file.compare(file.length() - 4, 4, ".JPG"));
-}
-std::vector<cv::Mat> getImagesInDirectory(std::string directory) {
-    std::vector<cv::Mat> out;
-    std::vector<std::pair<std::string, std::future<cv::Mat>>> futures;
-    std::string file;
 
-    for (const auto &entry : std::filesystem::directory_iterator(directory)) {
-        file = entry.path();
-        if (file.compare(file.size() - 4, 4, ".JPG") == 0) {
-            futures.emplace_back(file.substr(file.size() - 8, 4), std::async(std::launch::async, loadImage, entry.path()));
+int extract_first_integer_from_string(std::string const &str) {
+    std::string out;
+    std::string::const_iterator it;
+    for (it = str.begin(); it != str.end(); it++) {
+        if (out.empty() == false && std::isdigit(*it) == false) {
+            break;
+        } else if (std::isdigit(*it)) {
+            out.push_back(*it);
         }
     }
-    
-    std::sort(futures.begin(), futures.end(), 
-            [](const auto &a, const auto &b) { return std::stoi(a.first) < std::stoi(b.first); });
-
-    for (auto &pair : futures) {
-        out.push_back(pair.second.get());
-    }
-
-    return out;
-}
-void mouseCallback(int event, int x, int y, int flags, void* param) {
-    if (event == cv::EVENT_LBUTTONDOWN) {
-        std::cout << x << ", " << y << std::endl;
-    }
+    return std::stoi(out);
 }
 
+int extract_last_integer_from_string(std::string const &str) {
+    std::string out;
+    std::string::const_iterator it;
+    for (it = str.end(); it != str.begin(); it--) {
+        if (out.empty() == false && std::isdigit(*it) == false) {
+            break;
+        } else if (std::isdigit(*it)) {
+            out.insert(out.begin(), *it);
+        }
+    }
+    return std::stoi(out);
+}
+
+void _sort_image_paths(std::vector<std::string> &img_paths) {
+    std::sort(img_paths.begin(), img_paths.end(), [](std::string a, std::string b) {
+        return extract_last_integer_from_string(a) < extract_last_integer_from_string(b);
+    });
+}
+
+std::vector<std::string> get_image_paths_in_directory(std::string const &dir_path) {
+    std::vector<std::string> img_files;
+    for (const std::filesystem::directory_entry &entry :
+         std::filesystem::directory_iterator(dir_path)) {
+        if (string_ends_with(entry.path(), ".JPG")) {
+            img_files.push_back(entry.path());
+        }
+    }
+    return img_files;
+}
+
+void _read_images_into_mat(std::vector<std::string> const &img_paths, std::vector<cv::Mat> *image) {
+    for (int i = 0; i < img_paths.size(); i++) {
+        image->push_back(cv::imread(img_paths[i], cv::IMREAD_ANYDEPTH | cv::IMREAD_GRAYSCALE));
+    }
+}
+
+std::vector<cv::Mat> read_all_images_in_directory(const std::string &dir_path, int nthreads) {
+    std::vector<std::string> img_paths = get_image_paths_in_directory(dir_path);
+    _sort_image_paths(img_paths);
+    std::vector<std::vector<std::string>> split_img_paths = split_vector(img_paths, nthreads);
+
+    std::vector<std::vector<cv::Mat>> split_imgs(nthreads);
+
+    std::vector<std::thread> threads(nthreads);
+    for (int i = 0; i < nthreads; i++) {
+        threads[i] = std::thread(_read_images_into_mat, split_img_paths[i], &split_imgs[i]);
+    }
+
+    for (int i = 0; i < nthreads; i++) {
+        threads[i].join();
+    }
+
+    return collect_vector(split_imgs);
+}

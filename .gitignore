@@ -1,4 +1,6 @@
-build/
+build/*
 calibration/
 pictures/
-bin/
+analysis/
+*.toml
+this.txt
