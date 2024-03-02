@@ -4,5 +4,5 @@ pictures/
 analysis/
 *.toml
 this.txt
-.cache/
-julia/
+.cache
+julia
