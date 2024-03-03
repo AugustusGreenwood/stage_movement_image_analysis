@@ -41,3 +41,5 @@ template <typename T> std::vector<T> collect_vector(std::vector<std::vector<T>> 
 
     return out;
 }
+
+void writedlm(cv::Mat const mat, char const delim);

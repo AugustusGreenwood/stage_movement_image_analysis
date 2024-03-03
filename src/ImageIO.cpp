@@ -1,5 +1,6 @@
-#include "Interact.h"
+#include "ImageIO.hpp"
 #include <filesystem>
+#include <fstream>
 #include <opencv4/opencv2/highgui.hpp>
 #include <opencv4/opencv2/imgcodecs.hpp>
 #include <thread>
@@ -17,6 +18,7 @@ bool string_ends_with(std::string const &str, std::string const &end) {
     }
 }
 
+// I probably won't need this but it was easy to implement after extract_last*
 int extract_first_integer_from_string(std::string const &str) {
     std::string out;
     std::string::const_iterator it;
@@ -60,12 +62,16 @@ std::vector<std::string> get_image_paths_in_directory(std::string const &dir_pat
     return img_files;
 }
 
+// Used exclusively in read_all_images_in_directory
 void _read_images_into_mat(std::vector<std::string> const &img_paths, std::vector<cv::Mat> *image) {
     for (int i = 0; i < img_paths.size(); i++) {
         image->push_back(cv::imread(img_paths[i], cv::IMREAD_ANYDEPTH | cv::IMREAD_GRAYSCALE));
     }
 }
 
+// Reading all 100 images can take like ~20 second. So I start a thread pool with nthreads
+// and read in threads. Tested and 4 was about the fastest. Wish I could find a way to not use
+// push_bakc in _read_images_into_mat for better speed, but cant seem to get that to work
 std::vector<cv::Mat> read_all_images_in_directory(const std::string &dir_path, int nthreads) {
     std::vector<std::string> img_paths = get_image_paths_in_directory(dir_path);
     _sort_image_paths(img_paths);
@@ -83,4 +89,39 @@ std::vector<cv::Mat> read_all_images_in_directory(const std::string &dir_path, i
     }
 
     return collect_vector(split_imgs);
+}
+
+// Chose to just tke a psudo-functional approach to outputting floats and integers.
+// The alternative is to using mat.type but this would require a couple of if-else
+// blocks and this is just easier.
+void write_float_csv(std::string const file_name, cv::Mat const mat, char const delim) {
+    std::ofstream file;
+    file.open(file_name);
+    for (int i = 0; i < mat.rows; i++) {
+        for (int j = 0; j < mat.cols; j++) {
+            if (j == mat.cols - 1) {
+                file << mat.at<float>(i, j);
+            } else {
+                file << mat.at<float>(i, j) << delim;
+            }
+        }
+        file << std::endl;
+    }
+    file.close();
+}
+
+void write_int_csv(std::string const file_name, cv::Mat const mat, char const delim) {
+    std::ofstream file;
+    file.open(file_name);
+    for (int i = 0; i < mat.rows; i++) {
+        for (int j = 0; j < mat.cols; j++) {
+            if (j == mat.cols - 1) {
+                file << mat.at<float>(i, j);
+            } else {
+                file << mat.at<float>(i, j) << delim;
+            }
+        }
+        file << std::endl;
+    }
+    file.close();
 }
