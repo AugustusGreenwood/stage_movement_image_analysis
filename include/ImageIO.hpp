@@ -42,4 +42,4 @@ template <typename T> std::vector<T> collect_vector(std::vector<std::vector<T>> 
     return out;
 }
 
-void writedlm(cv::Mat const mat, char const delim);
+void write_float_csv(std::string const file_name, cv::Mat const mat, char const delim);
