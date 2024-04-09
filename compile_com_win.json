@@ -1,0 +1,17 @@
+[
+{
+  "directory": "/mnt/wsl/PHYSICALDRIVE1p2/@home/augustus/Projects/stage_movement_image_analysis/build_win",
+  "command": "/usr/bin/clang++ -I/mnt/wsl/PHYSICALDRIVE1p2/@home/augustus/Projects/stage_movement_image_analysis/include -isystem /usr/local/include/opencv4 -o CMakeFiles/image_analysis.dir/src/main.cpp.o -c /mnt/wsl/PHYSICALDRIVE1p2/@home/augustus/Projects/stage_movement_image_analysis/src/main.cpp",
+  "file": "/mnt/wsl/PHYSICALDRIVE1p2/@home/augustus/Projects/stage_movement_image_analysis/src/main.cpp"
+},
+{
+  "directory": "/mnt/wsl/PHYSICALDRIVE1p2/@home/augustus/Projects/stage_movement_image_analysis/build_win",
+  "command": "/usr/bin/clang++ -I/mnt/wsl/PHYSICALDRIVE1p2/@home/augustus/Projects/stage_movement_image_analysis/include -isystem /usr/local/include/opencv4 -o CMakeFiles/image_analysis.dir/src/ImageIO.cpp.o -c /mnt/wsl/PHYSICALDRIVE1p2/@home/augustus/Projects/stage_movement_image_analysis/src/ImageIO.cpp",
+  "file": "/mnt/wsl/PHYSICALDRIVE1p2/@home/augustus/Projects/stage_movement_image_analysis/src/ImageIO.cpp"
+},
+{
+  "directory": "/mnt/wsl/PHYSICALDRIVE1p2/@home/augustus/Projects/stage_movement_image_analysis/build_win",
+  "command": "/usr/bin/clang++ -I/mnt/wsl/PHYSICALDRIVE1p2/@home/augustus/Projects/stage_movement_image_analysis/include -isystem /usr/local/include/opencv4 -o CMakeFiles/image_analysis.dir/src/Analysis.cpp.o -c /mnt/wsl/PHYSICALDRIVE1p2/@home/augustus/Projects/stage_movement_image_analysis/src/Analysis.cpp",
+  "file": "/mnt/wsl/PHYSICALDRIVE1p2/@home/augustus/Projects/stage_movement_image_analysis/src/Analysis.cpp"
+}
+]

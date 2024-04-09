@@ -1,0 +1,20 @@
+[
+{
+  "directory": "/home/augustus/Projects/stage_movement_image_analysis/build",
+  "command": "/usr/bin/clang++ -I/home/augustus/Projects/stage_movement_image_analysis/include -isystem /usr/include/opencv4 -o CMakeFiles/image_analysis.dir/src/main.cpp.o -c /home/augustus/Projects/stage_movement_image_analysis/src/main.cpp",
+  "file": "/home/augustus/Projects/stage_movement_image_analysis/src/main.cpp",
+  "output": "CMakeFiles/image_analysis.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/augustus/Projects/stage_movement_image_analysis/build",
+  "command": "/usr/bin/clang++ -I/home/augustus/Projects/stage_movement_image_analysis/include -isystem /usr/include/opencv4 -o CMakeFiles/image_analysis.dir/src/ImageIO.cpp.o -c /home/augustus/Projects/stage_movement_image_analysis/src/ImageIO.cpp",
+  "file": "/home/augustus/Projects/stage_movement_image_analysis/src/ImageIO.cpp",
+  "output": "CMakeFiles/image_analysis.dir/src/ImageIO.cpp.o"
+},
+{
+  "directory": "/home/augustus/Projects/stage_movement_image_analysis/build",
+  "command": "/usr/bin/clang++ -I/home/augustus/Projects/stage_movement_image_analysis/include -isystem /usr/include/opencv4 -o CMakeFiles/image_analysis.dir/src/Analysis.cpp.o -c /home/augustus/Projects/stage_movement_image_analysis/src/Analysis.cpp",
+  "file": "/home/augustus/Projects/stage_movement_image_analysis/src/Analysis.cpp",
+  "output": "CMakeFiles/image_analysis.dir/src/Analysis.cpp.o"
+}
+]
